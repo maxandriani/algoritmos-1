@@ -39,7 +39,24 @@ typedef struct node {
  * @param list
  * @param value
  */
-void listAddNode( dynList list, int value ){}
+void listAddNode( dynList list, int value ){
+    dynList node;
+    dynList currentNode = list;
+    
+    node->value value;
+    
+    if (!list->value){
+        list->value = value;
+    } else {
+        while(currentNode->next){
+            if (!currentNode->next){
+                currentNode->next = *node;
+            } else {
+                currentNode = currentNode->next;
+            }
+        }
+    }
+}
 
 /**
  * Search on the dynamic list to the position of value and returns the position index
@@ -48,7 +65,24 @@ void listAddNode( dynList list, int value ){}
  * @param value The value to search
  * @return Returns the index of this value in the list
  */
-int listIndexOf( dynList list, int value ){}
+int listIndexOf( dynList list, int value ){
+    int index = -1;
+    int i = -1;
+    dynList node = list;
+    
+    while(node->next){
+        i++;
+        
+        if (node->value == value){
+            index = i;
+            break;
+        }
+        
+        node = node->next;
+    }
+    
+    return index;
+}
 
 /**
  * Count the number of elements is in the dynamic list
@@ -56,7 +90,21 @@ int listIndexOf( dynList list, int value ){}
  * @param list The dynamic list
  * @return The number of elements
  */
-int listSizeOf( dynList list ){}
+int listSizeOf( dynList list ){
+    int i = 1;
+    dynList node = list;
+    
+    while(node->next){
+        i++;
+        node = node->next;
+    }
+    
+    if (!node->value){
+        i = 0;
+    }
+    
+    return i;
+}
 
 /**
  * Sort a dynamic list by descrescent value
@@ -64,7 +112,8 @@ int listSizeOf( dynList list ){}
  * @param list The dynamic list
  * @return a new Dynamic list
  */
-dynList listSortDesc( dynList list ){};
+dynList listSortDesc( dynList list ){
+};
 
 /**
  * UI funcs
