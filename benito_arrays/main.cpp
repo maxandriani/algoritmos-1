@@ -68,6 +68,23 @@ void listAddNode( dynList *list, int value, int pos ){
         list = newNode;
     } else {
         // Add to index
+        while(currentNode->next != NULL){
+            currentNode = currentNode->next;
+            i++;
+            
+            if (i == pos){
+                break;
+            }
+        }
+        
+        dynList *newNode;
+        
+        newNode = (dynList *)malloc(sizeof(dynList));
+        
+        newNode->value = value;
+        newNode->next = currentNode->next;
+        
+        currentNode->next = newNode;
     }
     
 }
