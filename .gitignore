@@ -1,2 +1,5 @@
 # Netbeans
 nbproject/
+
+# Other
+.dep.inc
