@@ -1,5 +1,5 @@
 /* 
- * File:   main.cpp
+ * File:   main->cpp
  * Author: Max
  *
  * Created on 2 de Junho de 2016, 15:00
@@ -26,7 +26,7 @@ struct keys {
 // Dynamic lists
 typedef struct node {
     int value;
-    struct node * next;
+    struct node *next;
 } dynList;
 
 /**
@@ -39,23 +39,37 @@ typedef struct node {
  * @param list
  * @param value
  */
-void listAddNode( dynList list, int value ){
-    dynList node;
-    dynList currentNode = list;
+void listAddNode( dynList *list, int value, int pos ){
+    int i = 0;
+    dynList * currentNode = list;
     
-    node->value value;
-    
-    if (!list->value){
-        list->value = value;
-    } else {
-        while(currentNode->next){
-            if (!currentNode->next){
-                currentNode->next = *node;
-            } else {
+    if (pos == -1){
+        // Add to the end
+        if (list->value == NULL){
+            list->value = value;
+        } else {
+            while(currentNode->next != NULL){
                 currentNode = currentNode->next;
             }
+
+            currentNode->next = (dynList *)malloc(sizeof(dynList));
+            //(struct node *)malloc(sizeof(struct node));
+            currentNode->next->value = value;
+            currentNode->next->next = NULL;
         }
+    } else if (pos == 0) {
+        // Add to head
+        dynList *newNode;
+        
+        newNode = (dynList *)malloc(sizeof(dynList));
+        
+        newNode->value = value;
+        newNode->next = list;
+        list = newNode;
+    } else {
+        // Add to index
     }
+    
 }
 
 /**
@@ -146,7 +160,7 @@ dynList listSortDesc( dynList list ){
                     newListNode->next = *newNode;
                     break;
                 } else {
-                    // Posição ainda não encontrada... avança a lista
+                    // Posição ainda não encontrada->->-> avança a lista
                     newListNode = newListNode->next;
                 }
             }
@@ -169,8 +183,8 @@ dynList listSortDesc( dynList list ){
         }
     }
     
-    // Neste momento uma nova lista ordenada foi criada...
-    // Porém a lista anterior continua na memória... por questões de performance seria interessante deletar essa lista
+    // Neste momento uma nova lista ordenada foi criada->->->
+    // Porém a lista anterior continua na memória->->-> por questões de performance seria interessante deletar essa lista
     // Mas isso já está fora do escopo do trabalho
     
     return newList;
@@ -236,7 +250,7 @@ void uiPopulateList( dynList *list ){
     listAddNode( list, value );
     size = listSizeOf( list );
     
-    cout "Value " << value << " was added. The list has now " << size << " nodes\n";
+    cout "Value " << value << " was added-> The list has now " << size << " nodes\n";
     
     cout 
         << "Waiting interaction:\n"
@@ -344,7 +358,12 @@ void uiPrintList( dynList *list ){
  */
 int main(int argc, char** argv) {
     
-    dynList list;
+    dynList *list = NULL;
+    
+    list = malloc(sizeof(dynList));
+    
+    list->value = NULL;
+    list->next = NULL;
     
     uiStart( list );
     
