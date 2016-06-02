@@ -113,6 +113,67 @@ int listSizeOf( dynList list ){
  * @return a new Dynamic list
  */
 dynList listSortDesc( dynList list ){
+    dynList newList;
+    dynList newListNode;
+    
+    dynList node;
+    
+    
+    // Start the newList with the first value
+    newList->value = list->value;
+    
+    // Navigate to the old list
+    node = list;
+    
+    while(node->next){
+        if (newList->value > node->value){
+            // O item atual é menor do que o primeiro item da lista
+            // Portanto a nova lista deve ser varrida para encontrar a posição correta
+            newListNode = newList;
+            
+            while(newListNode->next){
+                if (newListNode->value < node->value){
+                    // O novo item é maior do que o nó atual, logo essa é a posição do novo item
+                    dynList newNode;
+                    newNode->value = node->value;
+                    newNode->next = newListNode->next;
+                    newListNode->next = *newNode;
+                    break;
+                } else if (!newListNode->next) {
+                    // Chegamos ao final da lista, portanto, essa é a posição do novo nó
+                    dynList newNode;
+                    newNode->value = node->value;
+                    newListNode->next = *newNode;
+                    break;
+                } else {
+                    // Posição ainda não encontrada... avança a lista
+                    newListNode = newListNode->next;
+                }
+            }
+            
+        } else {
+            // O item atual é maior que o primeiro item da lista
+            // portanto, ele deve ser o primeiro item
+            dynList newNode;
+            dynList nextNode;
+            
+            // Save old list head
+            nextNode = newList;
+            
+            // Create a new node
+            newNode->value = node->value;
+            newNode->next = *nextNode;
+            
+            // replace the new head
+            newList = newNode;
+        }
+    }
+    
+    // Neste momento uma nova lista ordenada foi criada...
+    // Porém a lista anterior continua na memória... por questões de performance seria interessante deletar essa lista
+    // Mas isso já está fora do escopo do trabalho
+    
+    return newList;
 };
 
 /**
