@@ -180,7 +180,7 @@ string calcFormatResponse( dynList *quocienteMemory, int length ){
             output += calcToStr( quocienteMemory->value ) + ' ';
         } else {
             quocienteNode = quocienteMemory;
-            while( quocienteNode->next != NULL ){
+            while( quocienteNode != NULL ){
                 if (quocienteNode->next == NULL){
                     // last node
                     output = output + " " + calcToStr( quocienteNode->value );
