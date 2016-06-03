@@ -22,7 +22,7 @@ typedef struct node {
     struct node *next;
 } dynList;
 
-void listAddNode( dynList *list, int value);
+dynList *  listAddNode( dynList *list, int value);
 int listSizeOf( dynList *list );
 int listValueOf( dynList *list, int index );
 
@@ -43,14 +43,17 @@ string calcPerformDivision( int n );
  * @param list
  * @param value
  */
-void listAddNode( dynList *list, int value){
+dynList * listAddNode( dynList *list, int value){
     dynList *newNode;
     dynList *node;
     
     node = list;
     
-    if (node->value == NULL){
-        node->value = value;
+    if (node == NULL){
+        newNode = (dynList *) malloc(sizeof(dynList));
+        newNode->value = value;
+        newNode->next = NULL;
+        list = newNode;
     } else {
         while(node->next != NULL){
             node = node->next;
@@ -62,6 +65,8 @@ void listAddNode( dynList *list, int value){
     
         node->next = newNode;
     }
+    
+    return list;
 };
 
 /**
@@ -369,22 +374,22 @@ string calcPerformDivision( int n ){
     // resto        quociente
 
     int quociente = NULL;
-    dynList *quocienteMemory;
+    dynList *quocienteMemory = NULL;
     int divisor = n;
     int dividendo = NULL;
     int resto = 1;
-    dynList *restoMemory;
+    dynList *restoMemory = NULL;
     int isPerforming = -2;
     int listSize = 1;
     
-    quocienteMemory = (dynList *) malloc(sizeof(dynList));
-    restoMemory = (dynList *) malloc(sizeof(dynList));
+    //quocienteMemory = (dynList *) malloc(sizeof(dynList));
+    //restoMemory = (dynList *) malloc(sizeof(dynList));
     
-    quocienteMemory->value = NULL;
-    quocienteMemory->next = NULL;
+    //quocienteMemory->value = NULL;
+    //quocienteMemory->next = NULL;
     
-    restoMemory->value = NULL;
-    restoMemory->next = NULL;
+    //restoMemory->value = NULL;
+    //restoMemory->next = NULL;
     
     // perform division
     while(isPerforming == -2){
@@ -393,8 +398,8 @@ string calcPerformDivision( int n ){
         quociente = calcFindMultiple( dividendo, divisor );
         resto = dividendo - ( quociente * divisor );
         
-        listAddNode( quocienteMemory, quociente );
-        listAddNode( restoMemory, resto );
+        quocienteMemory = listAddNode( quocienteMemory, quociente );
+        restoMemory = listAddNode( restoMemory, resto );
         
         listSize = listSizeOf( quocienteMemory );
         
