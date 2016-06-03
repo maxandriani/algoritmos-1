@@ -24,6 +24,7 @@ typedef struct node {
 
 void listAddNode( dynList *list, int value);
 int listSizeOf( dynList *list );
+int listValueOf( dynList *list, int index );
 
 // Declare calcs
 int calcFindMultiple( int *dividendo, int *divisor );
@@ -46,10 +47,6 @@ void listAddNode( dynList *list, int value){
     dynList *newNode;
     dynList *node;
     
-    newNode = (dynList *) malloc(sizeof(dynList));
-    newNode->value = value;
-    newNode->next = NULL;
-    
     node = list;
     
     if (node->value == NULL){
@@ -58,6 +55,10 @@ void listAddNode( dynList *list, int value){
         while(node->next != NULL){
             node = node->next;
         }
+        
+        newNode = (dynList *) malloc(sizeof(dynList));
+        newNode->value = value;
+        newNode->next = NULL;
     
         node->next = newNode;
     }
@@ -81,6 +82,31 @@ int listSizeOf( dynList *list ){
     }
     
     return size;
+}
+
+/**
+ * Get the value of index parameter
+ * 
+ * @param list
+ * @param index
+ * @return 
+ */
+int listValueOf( dynList *list, int index ){
+    int i = 0;
+    dynList *node;
+    
+    node = list;
+    
+    while(node != NULL){
+        if (i == index){
+            return node->value;
+        } else {
+            i++;
+            node = node->next;
+        }
+    }
+    
+    return -1;
 }
 
 /**
@@ -119,6 +145,7 @@ int calcFindMultiple( int dividendo, int divisor ){
 string calcFormatResponse( dynList *quocienteMemory, int length ){
     string output(".");
     dynList *quocienteNode;
+    int periodSize;
     
     /**
      * Format the response in the follow pattern
@@ -143,25 +170,33 @@ string calcFormatResponse( dynList *quocienteMemory, int length ){
             quocienteNode = quocienteNode->next;
         }
         output = output + " 0";
+    } else if (length == 0){
+        if (quocienteMemory->value == quocienteMemory->next->value){
+            output += calcToStr( quocienteMemory->value ) + ' ';
+        } else {
+            quocienteNode = quocienteMemory;
+            while( quocienteNode->next != NULL ){
+                if (quocienteNode->next == NULL){
+                    // last node
+                    output = output + " " + calcToStr( quocienteNode->value );
+                } else {
+                    // normla node
+                    output = output + calcToStr( quocienteNode->value );
+                }
+                quocienteNode = quocienteNode->next;
+            }
+        }
+    } else {
+        periodSize = listSizeOf( quocienteMemory ) - (length*2);
+        quocienteNode = quocienteMemory;
+        for (int i=0; i<( listSizeOf( quocienteMemory ) - length ); i++){
+            if (periodSize > 0 && periodSize == i){
+                output = output + " ";
+            }
+            output = output + calcToStr( quocienteNode->value );
+            quocienteNode = quocienteNode->next;
+        }
     }
-//    } else if (length == 0){
-//        if (intArray[0] == intArray[1]){
-//            output += intArray[0] + ' ';
-//        } else {
-//            for (var i=0; i<(intArray.length-1); i++){
-//                output += intArray[i];
-//            }
-//            output += ' '+intArray[(intArray.length-1)];
-//        }
-//    } else {
-//        var period = intArray.length - (length*2);
-//        for (var i=0; i<(intArray.length - length); i++){
-//            if (period > 0 && period == i){
-//                output += ' ';
-//            }
-//            output += intArray[i];
-//        }
-//    }
     
     // Only for tests
     // char to supress
@@ -210,98 +245,116 @@ string calcToStr( int x ){
         default:
             y = "0";
     }
+    
+    return y;
 }
 
+/**
+ * Calc the quocienteMemory and restoMemory to find periods
+ * 
+ * @param quocienteMemory
+ * @param restoMemory
+ * @param index
+ * @return 
+ */
 int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
+    int indexCounter = 0;
+    int isOdd = true;
+    string leftSide = "";
+    string rightSide = "";
+    int leftTemp;
+    int rightTemp;
+    int tempValue = NULL;
+    
+    dynList *quocienteNode;
+    int quocienteValue;
+    dynList *restoNode;
+    int restoValue;
+    
+    /**
+     * Verifica se o resto é igual a zero, se for, a divisão é precisa.
+     */
+    tempValue = listValueOf( restoMemory, (index-1) );
+    if (tempValue == 0){
+        return -1;
+    }
+    
+    /**
+     * Verifica dízimas simples, ou seja, aquelas na qual são compostas por um número unitário
+     * repetido infinitamente. Entretando, em dízimas compostas, na qual existe um número que não se 
+     * repete e que pode ser maior que 10, é necessário testar apenas as duas últimas posições.
+     * 
+     * Para detectar isso, serão comparados os dois últimos restos, que nessa situação sempre serão iguais.
+     */
+    if (index > 1){
+        restoNode = restoMemory;
+        while(restoNode->next != NULL){
+            if ( restoNode->next->next == NULL && restoNode->value == restoNode->next->value ){
+                return 0;
+            }
+            restoNode = restoNode->next;
+        }
+    }
+    
+    /**
+     * Calcula a metade arredondada para baixo da quantidade de casas.
+     */
+    for(int x=0; x<index; x++){
+        if (isOdd){
+            isOdd = 0;
+        } else {
+            indexCounter++;
+            isOdd = 1;
+        }
+    }
+    
+    /**
+     * Estratégia:
+     * Para detectar as dízimas complexas, ou seja, aquelas na qual o período é um número com mais
+     * de uma casa decimal, é necessário separar o conjunto de caracteres em dois grupos e compará-los.
+     * 
+     * O problema
+     * Entretanto existem situações onde a dízima é composta por dois segmentos, o primeiro composto
+     * por um número que não se repete e o segundo pelo período em si, que também pode ser complexo.
+     * 
+     * Portanto é necessário fazer duas verificações, uma horizontal e outra vertical.
+     * 
+     * A verificação horizontal deverá pegar o número da metade do tamanho da dízima, e fazer um teste
+     * vertical para cada um, dubtraindo uma casa decimal a cada teste
+     * 
+     * 111222 6 6
+     *  01122 5 4
+     *   1122 4 4
+     *    012 3 2
+     *     12 2 2
+     */
+    
+    //03571428571428 14
+    
+    if (index > 0){
+        for (int y=indexCounter; y>1; y--){
+            
+            // Reset hands
+            leftSide = "";
+            rightSide = "";
+            
+            for (int x=0; x<y; x++){
+                leftTemp = ((index - ((y * 2))) + x); // 0 + x
+                rightTemp = ((index - (y)) + x); // 6 + x
+
+                leftSide += calcToStr( listValueOf( quocienteMemory, leftTemp ));
+                rightSide += calcToStr( listValueOf( quocienteMemory, rightTemp ));
+            }
+
+            //if (rightInt == leftInt && restoMemory[index] == restoMemory[indexCounter]){
+            if (rightSide == leftSide){
+                return y;
+            }
+        }
+    }
+    
     return -2;
 }
-
-// check period
-//function findPeriod( quocienteMemory, restoMemory, index ){
-//    var indexCounter = 0;
-//    var isOdd = true;
-//    var leftInt = '';
-//    var rightInt = '';
-//    var leftTemp;
-//    var rightTemp;
-//    
-//    /**
-//     * Verifica se o resto é igual a zero, se for, a divisão é precisa.
-//     */
-//    if (restoMemory[index] == 0){
-//        return -1;
-//    }
-//    
-//    /**
-//     * Verifica dízimas simples, ou seja, aquelas na qual são compostas por um número unitáario
-//     * repetido infinitamente. Entretando, em dízimas compostas, na qual existe um número que não se 
-//     * repete e que pode ser maior que 10.
-//     * 
-//     * Para detectar isso, serão comparados os dois últimos restos, que nessa situação sempre serão iguais.
-//     */
-//    if (index > 0 && restoMemory[(index -1)] == restoMemory[index]){
-//        return 0;
-//    }
-//    
-//    /**
-//     * Calcula a metade arredondada para baixo da quantidade de casas.
-//     */
-//    for( var x=0; x<=index; x++){
-//        if (isOdd){
-//            isOdd = false;
-//        } else {
-//            indexCounter++;
-//            isOdd = true;
-//        }
-//    }
-//    
-//    /**
-//     * Estratégia:
-//     * Para detectar as dízimas complexas, ou seja, aquelas na qual o período é um número com mais
-//     * de uma casa decimal, é necessário separar o conjunto de caracteres em dois grupos e compará-los.
-//     * 
-//     * O problema
-//     * Entretanto existem situações onde a dízima é composta por dois segmentos, o primeiro composto
-//     * por um número que não se repete e o segundo pelo período em si, que também pode ser complexo.
-//     * 
-//     * Portanto é necessário fazer duas verificações, uma horizontal e outra vertical.
-//     * 
-//     * A verificação horizontal deverá pegar o número da metade do tamanho da dízima, e fazer um teste
-//     * vertical para cada um, dubtraindo uma casa decimal a cada teste
-//     * 
-//     * 111222 6 6
-//     *  01122 5 4
-//     *   1122 4 4
-//     *    012 3 2
-//     *     12 2 2
-//     */
-//    
-//    //03571428571428 14
-//    
-//    if (index > 0){
-//        for (var y=indexCounter; y>1; y--){
-//            
-//            // Reset hands
-//            leftInt = '';
-//            rightInt = '';
-//            
-//            for (var x=0; x<y; x++){
-//                leftTemp = ((index - ((y * 2)-1)) + x); // 0 + x
-//                rightTemp = ((index - (y -1)) + x); // 6 + x
-//
-//                leftInt += quocienteMemory[ leftTemp ];
-//                rightInt += quocienteMemory[ rightTemp ];
-//            }
-//
-//            //if (rightInt == leftInt && restoMemory[index] == restoMemory[indexCounter]){
-//            if (rightInt == leftInt){
-//                return y;
-//            }
-//        }
-//    }
-//    
-//    return -2;
-//}
 
 /**
  * Perform de division 1/n
@@ -326,6 +379,12 @@ string calcPerformDivision( int n ){
     
     quocienteMemory = (dynList *) malloc(sizeof(dynList));
     restoMemory = (dynList *) malloc(sizeof(dynList));
+    
+    quocienteMemory->value = NULL;
+    quocienteMemory->next = NULL;
+    
+    restoMemory->value = NULL;
+    restoMemory->next = NULL;
     
     // perform division
     while(isPerforming == -2){
@@ -389,7 +448,7 @@ int main(int argc, char** argv) {
                 cout << output;
                 // Imprimindo arquivo
                 outputFile << output << "\n";
-                cout << "saved" << endl;
+                cout << " saved" << endl;
             }
             
             cout << "--- processamento concluído ---" << endl;
@@ -403,6 +462,8 @@ int main(int argc, char** argv) {
     }
     
     outputFile.close();
+    
+    system("pause");
     
     return 0;
 }
