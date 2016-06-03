@@ -13,12 +13,13 @@ using namespace std;
 /**
   * keys
   */
-struct keys {
-    int F1 = 0;
-    int F2 = 1;
-    int F3 = 2;
-    int F4 = 3;
-};
+struct Keys {
+    int F1 = 1;
+    int F2 = 2;
+    int F3 = 3;
+    int F4 = 4;
+    int F5 = 5;
+} keys;
 
 /**
  * Typedefs
@@ -32,6 +33,11 @@ typedef struct node {
 /**
  * Array funcs
  */
+
+void listAddNode( dynList *list, int value, int pos );
+int listIndexOf( dynList *list, int value );
+int listSizeOf( dynList *list );
+dynList * listSortDesc( dynList *list );
 
 /**
  * Add a new node to an existent list
@@ -96,12 +102,12 @@ void listAddNode( dynList *list, int value, int pos ){
  * @param value The value to search
  * @return Returns the index of this value in the list
  */
-int listIndexOf( dynList list, int value ){
+int listIndexOf( dynList *list, int value ){
     int index = -1;
     int i = -1;
-    dynList node = list;
+    dynList * node = list;
     
-    while(node->next){
+    while(node->next != NULL){
         i++;
         
         if (node->value == value){
@@ -110,6 +116,11 @@ int listIndexOf( dynList list, int value ){
         }
         
         node = node->next;
+    }
+    
+    // test the last node
+    if (node->value == value){
+        index = ++i;
     }
     
     return index;
@@ -121,11 +132,11 @@ int listIndexOf( dynList list, int value ){
  * @param list The dynamic list
  * @return The number of elements
  */
-int listSizeOf( dynList list ){
+int listSizeOf( dynList *list ){
     int i = 1;
-    dynList node = list;
+    dynList *node = list;
     
-    while(node->next){
+    while(node->next != NULL){
         i++;
         node = node->next;
     }
@@ -143,61 +154,65 @@ int listSizeOf( dynList list ){
  * @param list The dynamic list
  * @return a new Dynamic list
  */
-dynList listSortDesc( dynList list ){
-    dynList newList;
-    dynList newListNode;
+dynList * listSortDesc( dynList *list ){
+    dynList * newList;
+    dynList * newListNode;
+    int newListIndex;
+    int isPerforming = 1;
     
-    dynList node;
-    
+    dynList * node;
     
     // Start the newList with the first value
+    newList = (dynList *)malloc(sizeof(dynList));
     newList->value = list->value;
+    newList->next = NULL;
     
     // Navigate to the old list
-    node = list;
+    node = list->next;
     
-    while(node->next){
+    while(node != NULL){
         if (newList->value > node->value){
             // O item atual é menor do que o primeiro item da lista
             // Portanto a nova lista deve ser varrida para encontrar a posição correta
             newListNode = newList;
+            newListIndex = 0;
             
-            while(newListNode->next){
+            while(newListNode != NULL){
                 if (newListNode->value < node->value){
                     // O novo item é maior do que o nó atual, logo essa é a posição do novo item
-                    dynList newNode;
-                    newNode->value = node->value;
-                    newNode->next = newListNode->next;
-                    newListNode->next = *newNode;
+                    listAddNode( newList, node->value, newListIndex );
                     break;
                 } else if (!newListNode->next) {
                     // Chegamos ao final da lista, portanto, essa é a posição do novo nó
-                    dynList newNode;
-                    newNode->value = node->value;
-                    newListNode->next = *newNode;
+                    listAddNode( newList, node->value, -1 );
                     break;
                 } else {
                     // Posição ainda não encontrada->->-> avança a lista
                     newListNode = newListNode->next;
                 }
+                newListIndex++;
             }
             
         } else {
             // O item atual é maior que o primeiro item da lista
             // portanto, ele deve ser o primeiro item
-            dynList newNode;
-            dynList nextNode;
+            dynList * newNode;
+            dynList * nextNode;
+            
+            newNode = (dynList *)malloc(sizeof(dynList));
             
             // Save old list head
             nextNode = newList;
             
             // Create a new node
             newNode->value = node->value;
-            newNode->next = *nextNode;
+            newNode->next = nextNode;
             
             // replace the new head
             newList = newNode;
         }
+        
+        node = node->next;
     }
     
     // Neste momento uma nova lista ordenada foi criada->->->
@@ -218,6 +233,12 @@ void uiClear(){
     system("cls");
 }
 
+void uiStart( dynList *list );
+void uiPopulateList( dynList *list );
+void uiSearch( dynList *list );
+void uiPrintList( dynList *list );
+void uiReverse( dynList *list );
+
 /**
  * UI Main interface
  * 
@@ -233,19 +254,22 @@ void uiStart( dynList *list ){
         << "Welcome to List Manager\n"
         << "*********************************\n\n\n"
         << "Waiting interaction:\n"
-        << "Press F1 to Add Values\n"
-        << "Press F2 to Search Values\n"
-        << "Press F3 to Print Values\n"
-        << "Press F4 to Exit\n";
+        << "Press 1 to Add Values\n"
+        << "Press 2 to Search Values\n"
+        << "Press 3 to Print Values\n"
+        << "Press 4 to Reverse list\n"
+        << "Press 5 to Exit\n";
     
     cin >> key;
     
-    if (key == keys->F1){
+    if (key == keys.F1){
         uiPopulateList( list );
-    } else if (key == keys->F2){
+    } else if (key == keys.F2){
         uiSearch( list );
-    } else if (key == keys->F3){
+    } else if (key == keys.F3){
         uiPrintList( list );
+    } else if (key == keys.F4){
+        uiReverse( list );
     }
 };
 
@@ -261,25 +285,28 @@ void uiPopulateList( dynList *list ){
     
     uiClear();
     
-    cout "The list has " << size << " nodes, type a number and press enter to add another node\n";
+    cout << "The list has " << size << " nodes, type a number and press enter to add another node\n";
     cin >> value;
     
-    listAddNode( list, value );
+    listAddNode( list, value, -1 );
     size = listSizeOf( list );
     
-    cout "Value " << value << " was added-> The list has now " << size << " nodes\n";
+    cout << "Value " << value << " was added-> The list has now " << size << " nodes\n";
+    
+    system("pause");
+    uiClear();
     
     cout 
         << "Waiting interaction:\n"
-        << "Press F1 to back Main Screen\n"
-        << "Press F2 to add another value\n"
-        << "Press F4 to exit\n";
+        << "Press 1 to back Main Screen\n"
+        << "Press 2 to add another value\n"
+        << "Press 5 to exit\n";
     
     cin >> key;
     
-    if (key == keys->F1){
+    if (key == keys.F1){
         uiStart( list );
-    } else if (key == keys->F2){
+    } else if (key == keys.F2){
         uiPopulateList( list );
     }
 };
@@ -312,18 +339,21 @@ void uiSearch( dynList *list ){
         // No results
         cout << "Error: Value not found\n";
     }
-        
+    
+    system("pause");
+    uiClear();
+    
     cout 
         << "Waiting interaction:\n"
-        << "Press F1 to back Main Screen\n"
-        << "Press F2 to search another value\n"
-        << "Press F4 to exit\n";
+        << "Press 1 to back Main Screen\n"
+        << "Press 2 to search another value\n"
+        << "Press 5 to exit\n";
     
     cin >> key;
     
-    if (key == keys->F1){
+    if (key == keys.F1){
         uiStart( list );
-    } else if (key == keys->F2){
+    } else if (key == keys.F2){
         uiSearch( list );
     }
     
@@ -337,7 +367,7 @@ void uiSearch( dynList *list ){
 void uiPrintList( dynList *list ){
     int index = 0;
     int key;
-    dynList node = list;
+    dynList *node = list;
     
     uiClear();
     
@@ -345,29 +375,43 @@ void uiPrintList( dynList *list ){
     cout << "--- Start ---\n";
     
     // Start print
-    while(node->next){
+    while(node->next != NULL) {
         cout << "Index: " << index << " > " << node->value << "\n";
-        
         index++;
-        
-        if (node->next){
-            node = node->next;
-        }
+        node = node->next;
     }
+    
+    // Print last index
+    cout << "Index: " << index << " > " << node->value << "\n";
     
     // ui interaction
     cout << "--- finished ---\n";
     
+    system("pause");
+    uiClear();
+    
     cout 
         << "Waiting interaction:\n"
-        << "Press F1 to back Main Screen\n"
-        << "Press F4 to exit\n";
+        << "Press 1 to back Main Screen\n"
+        << "Press 5 to exit\n";
     
     cin >> key;
     
-    if (key == keys->F1){
+    if (key == keys.F1){
         uiStart( list );
     }
+};
+
+/**
+ * Reverse the current list
+ * 
+ * @param list
+ */
+void uiReverse( dynList *list ){
+    dynList * reversedList;
+    reversedList = (dynList *) malloc(sizeof(dynList));
+    reversedList = listSortDesc( list );
+    uiPrintList( reversedList );
 };
 
 /*
@@ -377,12 +421,16 @@ int main(int argc, char** argv) {
     
     dynList *list = NULL;
     
-    list = malloc(sizeof(dynList));
+    list = (dynList *) malloc(sizeof(dynList));
     
     list->value = NULL;
     list->next = NULL;
     
+    // Start
     uiStart( list );
+    uiClear();
+    
+    system("pause");
     
     return 0;
 }

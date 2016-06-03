@@ -3,3 +3,5 @@ nbproject/
 
 # Other
 .dep.inc
+build/
+dist/
