@@ -1,5 +1,6 @@
 # Netbeans
 nbproject/private/
+*nbproject/private/
 
 # Other
 .dep.inc
