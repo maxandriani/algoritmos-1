@@ -405,8 +405,8 @@ string calcPerformDivision( int n ){
         
         isPerforming = calcFindPeriod( quocienteMemory, restoMemory, listSize);
         
-        // stop if does not find period at 500 times
-        if (listSize == 500){
+        // stop if does not find period at 1.000 times
+        if (listSize == 1000){
             isPerforming = -2;
         } else {
             listSize++;
@@ -433,17 +433,17 @@ int main(int argc, char** argv) {
     cout << "*******************" << endl;
     cout << " Welcome           " << endl;
     cout << "*******************" << endl << endl;
-    cout << "Este programa irá fazer uma divisão de 1/n, onde n é um intervalo definido a seguir:" << endl;
-    cout << "Por favor, informe o número INICIAL: (deverá ser maior que que zero)" << endl;
+    cout << "Este programa ira fazer uma divisao de 1/n, onde n e um intervalo definido a seguir:" << endl;
+    cout << "Por favor, informe o numero INICIAL: (devera ser maior que que zero)" << endl;
     scanf("%i", &startNum);
-    cout << "Por favor, informe o número FINAL: (deverá ser maior que o número inicial)" << endl;
+    cout << "Por favor, informe o numero FINAL: (devera ser maior que o numero inicial)" << endl;
     scanf("%i", &finishNum);
     
     if (startNum > 0){
         
         if (startNum <= finishNum){
             
-            cout << "--- Iniciando cálculoss ---" << endl;
+            cout << "--- Iniciando calculoss ---" << endl;
             
             for (int n = startNum; n<=finishNum; n++){
                 // ui
@@ -459,11 +459,11 @@ int main(int argc, char** argv) {
             cout << "--- processamento concluído ---" << endl;
             
         } else {
-            cout << "ERRO: O número final deve ser maior que o inicial" << endl;
+            cout << "ERRO: O numero final deve ser maior que o inicial" << endl;
         }
         
     } else {
-        cout << "ERRO: O número inicial deve ser maior que zero" << endl;
+        cout << "ERRO: O numero inicial deve ser maior que zero" << endl;
     }
     
     outputFile.close();
