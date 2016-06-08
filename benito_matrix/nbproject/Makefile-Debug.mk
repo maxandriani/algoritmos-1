@@ -60,7 +60,11 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/benito_matrix.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
+<<<<<<< HEAD
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/benito_matrix ${OBJECTFILES} ${LDLIBSOPTIONS} -static-libgcc -static-libstdc++
+=======
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/benito_matrix ${OBJECTFILES} ${LDLIBSOPTIONS}
+>>>>>>> b63d4ff7eacc874652bb80c28187fd16bcb384d8
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

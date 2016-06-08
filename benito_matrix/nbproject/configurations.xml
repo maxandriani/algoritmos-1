@@ -35,9 +35,12 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+<<<<<<< HEAD
         <linkerTool>
           <commandLine>-static-libgcc -static-libstdc++</commandLine>
         </linkerTool>
+=======
+>>>>>>> b63d4ff7eacc874652bb80c28187fd16bcb384d8
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
