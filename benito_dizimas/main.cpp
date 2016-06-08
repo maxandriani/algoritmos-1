@@ -30,7 +30,8 @@ int listValueOf( dynList *list, int index );
 int calcFindMultiple( int *dividendo, int *divisor );
 string calcFormatResponse( dynList *quocienteMemory, int length );
 string calcToStr( int x );
-int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index);
+int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index, int divisor);
+int calcFindDecimalSize(int n);
 string calcPerformDivision( int n );
 
 /**
@@ -176,20 +177,16 @@ string calcFormatResponse( dynList *quocienteMemory, int length ){
         }
         output = output + " 0";
     } else if (length == 0){
-        if (quocienteMemory->value == quocienteMemory->next->value){
-            output += calcToStr( quocienteMemory->value ) + ' ';
-        } else {
-            quocienteNode = quocienteMemory;
-            while( quocienteNode != NULL ){
-                if (quocienteNode->next == NULL){
-                    // last node
-                    output = output + " " + calcToStr( quocienteNode->value );
-                } else {
-                    // normla node
-                    output = output + calcToStr( quocienteNode->value );
-                }
-                quocienteNode = quocienteNode->next;
+        quocienteNode = quocienteMemory;
+        while( quocienteNode->next != NULL ){
+            if (quocienteNode->next->next == NULL){
+                // last node
+                output = output + " " + calcToStr( quocienteNode->value );
+            } else {
+                // normla node
+                output = output + calcToStr( quocienteNode->value );
             }
+            quocienteNode = quocienteNode->next;
         }
     } else {
         periodSize = listSizeOf( quocienteMemory ) - (length*2);
@@ -262,7 +259,7 @@ string calcToStr( int x ){
  * @param index
  * @return 
  */
-int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
+int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index, int divisor){
     int indexCounter = 0;
     int isOdd = true;
     string leftSide = "";
@@ -270,6 +267,7 @@ int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
     int leftTemp;
     int rightTemp;
     int tempValue = NULL;
+    int divisorSize = calcFindDecimalSize( divisor );
     
     dynList *quocienteNode;
     int quocienteValue;
@@ -289,15 +287,23 @@ int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
      * repetido infinitamente. Entretando, em dízimas compostas, na qual existe um número que não se 
      * repete e que pode ser maior que 10, é necessário testar apenas as duas últimas posições.
      * 
-     * Para detectar isso, serão comparados os dois últimos restos, que nessa situação sempre serão iguais.
+     * Para detectar isso, serão comparados os n últimos restos, que nessa situação sempre serão iguais,
+     * junto aos n ultimos quocientes, que sejam diferentes de zero, onde n é o tamanho de decimais do
+     * divisor
      */
-    if (index > 1){
+    if (index > divisorSize){
         restoNode = restoMemory;
-        while(restoNode->next != NULL){
-            if ( restoNode->next->next == NULL && restoNode->value == restoNode->next->value ){
-                return 0;
-            }
+        quocienteNode = quocienteMemory;
+        
+        while(quocienteNode->next->next != NULL){
             restoNode = restoNode->next;
+            quocienteNode = quocienteNode->next;
+        }
+        
+        if ( restoNode->value == restoNode->next->value
+             && quocienteNode->value == quocienteNode->next->value
+             && quocienteNode->value != 0){
+            return 0;
         }
     }
     
@@ -327,6 +333,10 @@ int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
      * A verificação horizontal deverá pegar o número da metade do tamanho da dízima, e fazer um teste
      * vertical para cada um, dubtraindo uma casa decimal a cada teste
      * 
+     * Fix: Foi observado que um a quantidade de números repetidos, porém, que não são sízimas
+     * cresce conforme o tamanho do divisor, com base nisso, foram feitas adaptações para
+     * proteger o código de falsos positivos.
+     * 
      * 111222 6 6
      *  01122 5 4
      *   1122 4 4
@@ -336,15 +346,15 @@ int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
     
     //03571428571428 14
     
-    if (index > 0){
-        for (int y=indexCounter; y>1; y--){
+    if (index > divisorSize){
+        for (int y=indexCounter; y>(divisorSize); y--){
             
             // Reset hands
             leftSide = "";
             rightSide = "";
             
             for (int x=0; x<y; x++){
-                leftTemp = ((index - ((y * 2))) + x); // 0 + x
+                leftTemp = ((index - (y * 2)) + x); // 0 + x
                 rightTemp = ((index - (y)) + x); // 6 + x
 
                 leftSide += calcToStr( listValueOf( quocienteMemory, leftTemp ));
@@ -360,6 +370,24 @@ int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index){
     
     return -2;
 }
+
+/**
+ * Find Deciaml Size
+ * 
+ * @param n
+ * @return 
+ */
+int calcFindDecimalSize( int n ){
+    int i = 1;
+    int c = 1;
+    
+    while((i*10) <= n){
+        i = i * 10;
+        c++;
+    }
+    
+    return c;
+};
 
 /**
  * Perform de division 1/n
@@ -382,16 +410,6 @@ string calcPerformDivision( int n ){
     int isPerforming = -2;
     int listSize = 1;
     
-    //quocienteMemory = (dynList *) malloc(sizeof(dynList));
-    //restoMemory = (dynList *) malloc(sizeof(dynList));
-    
-    //quocienteMemory->value = NULL;
-    //quocienteMemory->next = NULL;
-    
-    //restoMemory->value = NULL;
-    //restoMemory->next = NULL;
-    
-    // perform division
     while(isPerforming == -2){
         // Acrescenta uma dezena à divisão
         dividendo = resto * 10;
@@ -403,14 +421,8 @@ string calcPerformDivision( int n ){
         
         listSize = listSizeOf( quocienteMemory );
         
-        isPerforming = calcFindPeriod( quocienteMemory, restoMemory, listSize);
+        isPerforming = calcFindPeriod( quocienteMemory, restoMemory, listSize, divisor);
         
-        // stop if does not find period at 1.000 times
-        if (listSize == 1000){
-            isPerforming = -2;
-        } else {
-            listSize++;
-        }
     }
     
     return calcFormatResponse( quocienteMemory, isPerforming );
