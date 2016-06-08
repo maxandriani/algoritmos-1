@@ -6,9 +6,8 @@
 
 /* 
  * File:   main.cpp
- * Author: Maxmiliano
  *
- * Created on 8 de Junho de 2016, 10:52
+ * Created on 8 de Junho de 2016, 16:11
  */
 
 #include <cstdlib>
@@ -17,36 +16,51 @@
 
 using namespace std;
 
+void matrixPopulate(int ** matrix, int rows, int cols);
+
 /*
  * 
  */
 int main(int argc, char** argv) {
     
-    int n;
-    int v;
     int ** matrix;
+    int n;
     
-    cout << "Informe a quantidade de referencias circulares" << endl;
+    // Ask user
+    cout << "Por Favor, informe a quantidade de probabilidades:" << endl;
     cin >> n;
     
-    // Gerando linhas
-    matrix = new int*[(2*n)];
-    
-    // /gerando colunas
-    for(int x=0; x<(2*n); x++){
-        matrix[x] = new int[n];
+    if (n){
+        // Creating rows
+        matrix = new int*[(int)pow(2,n)];
         
-        v=0;
+        for (int x; x<pow(2,n); x++){
+            matrix[x] = new int[n];
+        }
         
-        // Populando
+        // Populate
+        matrixPopulate(matrix, (int)pow(2, n), n);
         
+    } else {
+        cout << "Erro: o valor precisa ser inteiro" << endl;
     }
-    
-    // Imprimindo
-    cout << "Valor 0:0 " << matrix[0][0] << endl;
-    
-    system("pause");
     
     return 0;
 }
 
+void matrixPopulate(int ** matrix, int rows, int cols){
+    for (int y=0; y<rows; y++){
+        
+        for(int x=0; x<cols; x++){
+            if (y & (int)pow(2,x)){
+                cout <<  1;
+                cout << " ";
+            } else {
+                cout <<  0;
+                cout << " ";
+            }
+        }
+        cout << endl;
+        
+    }
+}
