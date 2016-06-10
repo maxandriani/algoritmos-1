@@ -19,6 +19,12 @@ void exercicio_91();
 void exercicio_92();
 void exercicio_93();
 void exercicio_94();
+void exercicio_94_opcao_a();
+void exercicio_94_opcao_b();
+void exercicio_94_opcao_c();
+void exercicio_94_opcao_d();
+int exercicio_94_get_a();
+int exercicio_94_get_b();
 void exercicio_95();
 void exercicio_96();
 void exercicio_97();
@@ -27,6 +33,11 @@ void exercicio_99();
 void exercicio_100();
 void exercicio_101();
 void exercicio_102();
+void exercicio_102_add_room(int *rooms[], int *clients[], int room);
+void exercicio_102_remove_room(int *rooms[], int *clients[], int room);
+void exercicio_102_calc_client(int *rooms[], int *clients[], int room);
+void exercicio_102_calc_total(int *rooms[], int *clients[]);
+float exercicio_102_calc_total_by_client(int diarias);
 void exercicio_103();
 void exercicio_104();
 void exercicio_105();
@@ -296,7 +307,134 @@ void exercicio_93(){
  * c) Executar o conjunto 100 vezes utilizando duas estruturas de repetição;
  * d) Executar N vezes, onde N é uma variável informada pelo usuário;
  */
-void exercicio_94(){}
+void exercicio_94(){
+    int k;
+    
+    cout << "Escolha uma opcao do menu abaixo: " << endl;
+    cout << "1: Executar o conjunto 10 vezes;" << endl;
+    cout << "2: Nao executar nenhuma vez;" << endl;
+    cout << "3: Executar o conjunto 100 vezes utilizando duas estruturas de repeticao;" << endl;
+    cout << "4: Executar N vezes, onde voce deve informar o valor de N;" << endl;
+    cout << "5: Sair" << endl;
+    cin >> k;
+    
+    system("cls");
+    
+    switch(k){
+        case 1:
+            exercicio_94_opcao_a();
+            system("pause");
+            break;
+        case 2:
+            exercicio_94_opcao_b();
+            system("pause");
+            break;
+        case 3:
+            exercicio_94_opcao_c();
+            system("pause");
+            break;
+        case 4:
+            exercicio_94_opcao_d();
+            system("pause");
+            break;
+        case 5:
+            break;
+        default:
+            system("cls");
+            exercicio_94();
+    }
+}
+
+/**
+ * Executar o conjunto 10 vezes
+ */
+void exercicio_94_opcao_a(){
+    int a;
+    int b;
+    int modulo;
+    
+    for (int x=0; x<10; x++){
+        cout << "Repeticao " << (x+1) << endl;
+        a = exercicio_94_get_a();
+        b = exercicio_94_get_b();
+        modulo = a % b;
+        cout << "O modulo de (a % b) e: " << modulo << endl << endl;
+    }
+};
+
+/**
+ * Não executar nenhuma vez
+ */
+void exercicio_94_opcao_b(){
+    int a;
+    int b;
+    int modulo;
+    int ctrl = false;
+    
+    while (ctrl){
+        a = exercicio_94_get_a();
+        b = exercicio_94_get_b();
+        modulo = a % b;
+        cout << "O modulo de (a % b) e: " << modulo << endl << endl;
+    }
+};
+
+/**
+ * Executar o conjunto 100x com 2 estruturas de repetição
+ */
+void exercicio_94_opcao_c(){
+    int a;
+    int b;
+    int modulo;
+    int i = 0;
+    
+    while (i < 100){
+        cout << "Repeticao " << (i+1) << endl;
+        
+        for (int x=0; x<2; x++){
+            if (x == 0){
+                a = exercicio_94_get_a();
+            } else {
+                b = exercicio_94_get_b();
+            }
+        }
+
+        modulo = a % b;
+        cout << "O modulo de (a % b) e: " << modulo << endl << endl;
+        i++;
+    }
+};
+void exercicio_94_opcao_d(){
+    int a;
+    int b;
+    int modulo;
+    int n;
+    int i=0;
+    
+    cout << "Informe o valor de N" << endl;
+    cin >> n;
+    
+    while (i<n){
+        cout << "Repeticao " << (i+1) << endl;
+        a = exercicio_94_get_a();
+        b = exercicio_94_get_b();
+        modulo = a % b;
+        cout << "O modulo de (a % b) e: " << modulo << endl << endl;
+        i++;
+    }
+};
+int exercicio_94_get_a(){
+    int a;
+    cout << "Informe o valor de A (int): " << endl;
+    cin >> a;
+    return a;
+}
+int exercicio_94_get_b(){
+    int b;
+    cout << "Informe o valor de B (int): " << endl;
+    cin >> b;
+    return b;
+}
 
 /**
  * Para uma turma de 45 alunos, contrua um algoritmo que determine:
@@ -483,9 +621,222 @@ void exercicio_99(){
     
     system("pause");
 }
-void exercicio_100(){}
-void exercicio_101(){}
-void exercicio_102(){}
+
+/**
+ * Crie um programa que peça 10 números inteiros e apresente:
+ * a média;
+ * o maior;
+ * e o menor número;
+ */
+void exercicio_100(){
+    int num;
+    float media;
+    int menor = 0;
+    int maior = 0;
+    
+    cout << "Informe 10 valores inteiros:" << endl;
+    
+    for (int x=0; x<10; x++){
+        cout << "Valor " << (x+1) << ": ";
+        cin >> num;
+        cout << endl;
+        media += (float) num;
+        if (x < menor){
+            menor = x;
+        }
+        if (x > maior){
+            maior = x;
+        }
+    }
+    
+    media = media/10;
+    
+    cout << "O maior valor e: " << maior << endl;
+    cout << "O menor valor a: " << menor << endl;
+    cout << "A media e: " << media << endl;
+    system("pause");
+}
+
+/**
+ * Escreva um programa que determine o fatorial de um número
+ * n! = 1 * 2 * 3 * 4 * ... * N;
+ */
+void exercicio_101(){
+    int n;
+    int f = 1;
+    
+    cout << "Informe um número inteiro para calcular seu fatorial" << endl;
+    cin >> n;
+    
+    for (int x=1; x<=n; x++){
+        f = f * x;
+    }
+    
+    cout << "O fatorial de " << n << " e " << f << endl;
+    system("pause");
+}
+
+/**
+ * Um hotel com 30 quartos cobra R$ 50,00 por diária e mais uma taxa de serviços.
+ * A taxa de serviços é de:
+ * R$ 4,00 por diaria, se o número de diarias for < 15;
+ * R$ 3,60 por diária, se o número de diárias for == 15;
+ * R$ 3,00 por diária, se o número de diárias for > 15;
+ */
+void exercicio_102(){
+    string *clients = new *string[30];
+    int *rooms = new *int[30];
+    int room;
+    int k;
+    
+    system("cls");
+    
+    cout << "****************************************" << endl;
+    cout << "Hotel 102" << endl;
+    cout << "Quartos disponíveis: ";
+    
+    for(int x=0; x<30; x++){
+        if (rooms[x] != 0){
+            cout << " [" << (x+1) << "] ";
+        }
+    }
+    
+    cout << endl;
+    cout << "****************************************" << endl << endl;
+    
+    
+    cout << "Por favor, escolha a opção desejada:" << endl;
+    cout << "1) Registrar reserva;" << endl;
+    cout << "2) Liberar quarto;" << endl;
+    cout << "3) Calcular total do quarto" << endl;
+    cout << "4) Calcular total do hotel" << endl;
+    cout << "5) Sair" << endl;
+    
+    cin >> k;
+    
+    system("cls");
+    
+    switch(k){
+        case 1:
+            cout << "Informe o numero do quarto: " << endl;
+            cin >> room;
+            system("cls");
+            
+            exercicio_102_add_room(rooms, clients);
+            system("pause");
+            break;
+            
+        case 2:
+            cout << "Informe o numero do quarto: " << endl;
+            cin >> room;
+            system("cls");
+            
+            exercicio_102_remove_room(rooms, clients);
+            system("pause");
+            break;
+            
+        case 3:
+            cout << "Informe o numero do quarto: " << endl;
+            cin >> room;
+            system("cls");
+            
+            exercicio_102_calc_client(rooms, clients, room);
+            system("pause");
+            break;
+            
+        case 4:
+            exercicio_102_calc_total(rooms, clients);
+            system("pause");
+            break;
+            
+        case 5:
+            break;
+            
+        default:
+            exercicio_102();
+    }
+    
+}
+
+/**
+ * Adicionar um novo hóspede
+ * 
+ * @param rooms
+ * @param clients
+ * @param room
+ */
+void exercicio_102_add_room(int *rooms[], int *clients[], int room){
+    cout << "****************************************" << endl;
+    cout << "Registro de hospedes" << endl;
+    cout << "Quarto: " << (room+1) << endl;
+    cout << "****************************************" << endl << endl;
+    cout << "Informe o nome do hospede: ";
+    cin >> clients[room];
+    cout << "Informe a quantidade de diarias: ";
+    cin >> rooms[room];
+}
+
+/**
+ * Remover um hóspede e zerar seu quarto
+ * 
+ * @param rooms
+ * @param clients
+ */
+void exercicio_102_remove_room(int *rooms[], int *clients[], int room){
+    rooms[room] = 0;
+    clients[room] = 0;
+    
+    cout << "O quarto " << (room+1) << " foi liberado com sucesso" << endl;
+    system("pause");
+}
+
+/**
+ * Calcular total do cliente
+ * 
+ * @param rooms
+ * @param clients
+ * @param room
+ */
+void exercicio_102_calc_client(int *rooms[], int *clients[], int room){
+    
+    float total;
+    
+    if (rooms[room] != 0){
+        
+        total = exercicio_102_calc_total_by_client(rooms[room]);
+        
+        cout << "****************************************" << endl;
+        cout << "Registro de hospedes" << endl;
+        cout << "Quarto: " << (room+1) << endl;
+        cout << "****************************************" << endl << endl;
+        
+        cout << "Hospede: " << clients[room] << endl;
+        cout << "Diarias: " << rooms[room] << endl;
+        
+        cout << "Total: " << total;
+    } else {
+        cout << "Erro: Esque quarto está vazio" << endl;
+    }
+    
+    system("pause");
+}
+void exercicio_102_calc_total(int *rooms[], int *clients[]);
+float exercicio_102_calc_total_by_client(int diarias){
+    float total;
+    
+    total = (50.0 * diarias );
+        
+    if (diarias > 15){
+        total += 3.0;
+    } else if (diarias == 15){
+        total += 3.6;
+    } else {
+        total += 4.0;
+    }
+    
+    return total;
+}
+
 void exercicio_103(){}
 void exercicio_104(){}
 void exercicio_105(){}
