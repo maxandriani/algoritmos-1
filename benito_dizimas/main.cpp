@@ -152,6 +152,7 @@ string calcFormatResponse( dynList *quocienteMemory, int length ){
     string output(".");
     dynList *quocienteNode;
     int periodSize;
+    int count = 0;
     
     /**
      * Format the response in the follow pattern
@@ -181,12 +182,17 @@ string calcFormatResponse( dynList *quocienteMemory, int length ){
         while( quocienteNode->next != NULL ){
             if (quocienteNode->next->next == NULL){
                 // last node
-                output = output + " " + calcToStr( quocienteNode->value );
+                if (count == 0){
+                    output = output + calcToStr( quocienteNode->value );
+                } else {
+                    output = output + " " + calcToStr( quocienteNode->value );
+                }
             } else {
                 // normla node
                 output = output + calcToStr( quocienteNode->value );
             }
             quocienteNode = quocienteNode->next;
+            count++;
         }
     } else {
         periodSize = listSizeOf( quocienteMemory ) - (length*2);
