@@ -684,8 +684,8 @@ void exercicio_101(){
  * R$ 3,00 por diária, se o número de diárias for > 15;
  */
 void exercicio_102(){
-    string *clients = new *string[30];
-    int *rooms = new *int[30];
+    string *clients = new string[30];
+    int *rooms = new int[30];
     int room;
     int k;
     
@@ -797,13 +797,13 @@ void exercicio_102_remove_room(int *rooms[], int *clients[], int room){
  * @param clients
  * @param room
  */
-void exercicio_102_calc_client(int *rooms[], int *clients[], int room){
+void exercicio_102_calc_client(int **rooms[], int **clients[], int room){
     
     float total;
     
     if (rooms[room] != 0){
         
-        total = exercicio_102_calc_total_by_client(rooms[room]);
+        total = exercicio_102_calc_total_by_client((int)rooms[room]);
         
         cout << "****************************************" << endl;
         cout << "Registro de hospedes" << endl;
