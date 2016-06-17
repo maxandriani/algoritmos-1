@@ -11,10 +11,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <time.h>
 
 using namespace std;
-
-void uiClear();
 
 // Declare dynLists
 typedef struct node {
@@ -22,7 +21,7 @@ typedef struct node {
     struct node *next;
 } dynList;
 
-dynList *  listAddNode( dynList *list, int value);
+dynList *listAddNode( dynList *list, int value);
 int listSizeOf( dynList *list );
 int listValueOf( dynList *list, int index );
 
@@ -33,6 +32,12 @@ string calcToStr( int x );
 int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index, int divisor);
 int calcFindDecimalSize(int n);
 string calcPerformDivision( int n );
+
+// Declare gui
+void guiPrintHeader();
+void guiStart(int *startInt, int *finishInt);
+void guiAddInterval(int *startInt, int *finishInt);
+void guiCalc(int *startInt, int *finishInt);
 
 /**
  * Dyn Lists
@@ -435,58 +440,186 @@ string calcPerformDivision( int n ){
 
 }
 
+/**
+ * Print software ui header
+ */
+void guiPrintHeader(){
+    system("cls");
+    
+    cout << "*****************************************************" << endl;
+    cout << " Welcome to Period Calculator" << endl;
+    cout << " v. 1.5" << endl;
+    cout << "*****************************************************" << endl << endl;
+}
+
+/**
+ * UI Main Screen
+ * 
+ * @param startInt
+ * @param finishInt
+ */
+void guiStart(int *startInt, int *finishInt){
+    int key;
+    
+    guiPrintHeader();
+    
+    cout << "Este programa fara uma divisao de 1/n, onde n e um intervalo definido a seguir." << endl << endl;
+    
+    cout << "Por favor, escolha uma opcao:" << endl;
+    cout << "1. Informar intervalo." << endl;
+    cout << "2. Calcular dizimas." << endl;
+    cout << "3. Sair." << endl;
+    
+    cin >> key;
+    
+    switch(key){
+        case 1:
+            guiAddInterval(startInt, finishInt);
+            break;
+            
+        case 2:
+            guiCalc(startInt, finishInt);
+            break;
+            
+        case 3:
+            break;
+            
+        default:
+            cout << "Opcao invalida, tente novamente" << endl;
+            system("pause");
+    }
+}
+
+/**
+ * Add a new calc interval
+ * 
+ * @param startInt
+ * @param finishInt
+ */
+void guiAddInterval(int *startInt, int *finishInt){
+    int next = 0;
+    int startTemp, finishTemp;
+    
+    guiPrintHeader();
+    
+    cout << "=====================================================" << endl;
+    cout << " Intervalo: 1/" << (int) startInt << " a 1/" << (int) finishInt << endl;
+    cout << "=====================================================" << endl << endl;
+    
+    while(next == 0){
+        cout << "Por favor, informe o numero inicial: " << endl;
+        cin >> startTemp;
+        
+        if (startTemp > 0){
+            next = 1;
+            startInt = (int *) startTemp;
+        } else {
+            cout << "Erro: O número inicial deve ser maior que zero" << endl;
+            system("pause");
+        }
+    }
+    
+    next = 0;
+    while(next == 0){
+        cout << "Por favor, informe o numero final: " << endl;
+        cin >> finishTemp;
+        
+        if (finishTemp >= startTemp){
+            next = 1;
+            finishInt = (int *) finishTemp;
+        } else {
+            cout << "Erro: O numero final deve ser maior ou igual o numero inicial" << endl;
+            system("pause");
+        }
+    }
+    
+    guiPrintHeader();
+    
+    cout << "=====================================================" << endl;
+    cout << " Intervalo: 1/" << (int) startInt << " a 1/" << (int) finishInt << endl;
+    cout << "=====================================================" << endl << endl;
+    
+    cout << "Pressione 1 para voltar ao menu, ou" << endl;
+    cout << "Pressione 2 para calcular dizimas, ou" << endl;
+    cout << "Pressione 3 para sair" << endl;
+    cin >> next;
+    
+    if (next == 1){
+        guiStart(startInt, finishInt);
+    } else if (next == 2){
+        guiCalc(startInt, finishInt);
+    }
+}
+
+/**
+ * Perform calculations
+ * 
+ * @param startInt
+ * @param finishInt
+ */
+void guiCalc(int *startInt, int *finishInt){
+    
+    string output;
+    ofstream outputFile;
+    time_t startTime;
+    double diff = 0;
+    int key = 0;
+    
+    startTime = time(0);
+
+    guiPrintHeader();
+    
+    cout << "=====================================================" << endl;
+    cout << " Intervalo: 1/" << (int) startInt << " a 1/" << (int) finishInt << endl;
+    cout << "=====================================================" << endl << endl;
+    
+    // Remove file if exists
+    remove( "output.txt" );
+    // Open File
+    outputFile.open ("output.txt");
+    
+    for (int n = (int)startInt; n<= (int)finishInt; n++){
+        // ui
+        cout << "[1/" << n << "]: ";
+        // print white spaces
+        for(int x=calcFindDecimalSize(n); x<(calcFindDecimalSize((int)finishInt)+2); x++){
+            cout << " ";
+        }
+        // Perform
+        output = calcPerformDivision( n );
+        cout << output << endl;
+        // Imprimindo arquivo
+        outputFile << output << "\n";
+    }
+
+    outputFile.close();
+    
+    diff = difftime( time(0), startTime);
+    
+    cout << "=====================================================" << endl;
+    cout << "Processamento concluido em " << diff << " seconds" << endl;
+    cout << "=====================================================" << endl;
+    cout << "Memoria de calculo salva em output.txt" << endl << endl;
+    
+    cout << "Pressione 1 para voltar ao menu, ou" << endl;
+    cout << "Pressione 2 para sair" << endl;
+    cin >> key;
+    
+    if (key == 1){
+        guiStart(startInt, finishInt);
+    }
+
+}
+
 /*
  * The core function
  */
 int main(int argc, char** argv) {
     
-    string output;
-    int startNum, finishNum;
-    ofstream outputFile;
+    int startInt = 1;
+    int finishInt = 1;
     
-    // Open file
-    remove( "output.txt" );
-    outputFile.open ("output.txt");
-    
-    cout << "*******************" << endl;
-    cout << " Welcome           " << endl;
-    cout << "*******************" << endl << endl;
-    cout << "Este programa ira fazer uma divisao de 1/n, onde n e um intervalo definido a seguir:" << endl;
-    cout << "Por favor, informe o numero INICIAL: (devera ser maior que que zero)" << endl;
-    scanf("%i", &startNum);
-    cout << "Por favor, informe o numero FINAL: (devera ser maior que o numero inicial)" << endl;
-    scanf("%i", &finishNum);
-    
-    if (startNum > 0){
-        
-        if (startNum <= finishNum){
-            
-            cout << "--- Iniciando calculoss ---" << endl;
-            
-            for (int n = startNum; n<=finishNum; n++){
-                // ui
-                cout << "1/" << n << ": ";
-                // Perform
-                output = calcPerformDivision( n );
-                cout << output;
-                // Imprimindo arquivo
-                outputFile << output << "\n";
-                cout << " saved" << endl;
-            }
-            
-            cout << "--- processamento concluído ---" << endl;
-            
-        } else {
-            cout << "ERRO: O numero final deve ser maior que o inicial" << endl;
-        }
-        
-    } else {
-        cout << "ERRO: O numero inicial deve ser maior que zero" << endl;
-    }
-    
-    outputFile.close();
-    
-    system("pause");
+    guiStart((int *)startInt, (int *)finishInt);
     
     return 0;
 }
