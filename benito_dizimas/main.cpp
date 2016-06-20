@@ -342,9 +342,9 @@ int calcFindPeriod( dynList *quocienteMemory, dynList *restoMemory, int index, i
      * Portanto é necessário fazer duas verificações, uma horizontal e outra vertical.
      * 
      * A verificação horizontal deverá pegar o número da metade do tamanho da dízima, e fazer um teste
-     * vertical para cada um, dubtraindo uma casa decimal a cada teste
+     * vertical para cada um, subtraindo uma casa decimal a cada teste
      * 
-     * Fix: Foi observado que um a quantidade de números repetidos, porém, que não são sízimas
+     * Fix: Foi observado que a quantidade de números repetidos, porém, que não são dízimas
      * cresce conforme o tamanho do divisor, com base nisso, foram feitas adaptações para
      * proteger o código de falsos positivos.
      * 
