@@ -33,11 +33,6 @@ void exercicio_99();
 void exercicio_100();
 void exercicio_101();
 void exercicio_102();
-void exercicio_102_add_room(int *rooms[], int *clients[], int room);
-void exercicio_102_remove_room(int *rooms[], int *clients[], int room);
-void exercicio_102_calc_client(int *rooms[], int *clients[], int room);
-void exercicio_102_calc_total(int *rooms[], int *clients[]);
-float exercicio_102_calc_total_by_client(int diarias);
 void exercicio_103();
 void exercicio_104();
 void exercicio_105();
@@ -684,159 +679,120 @@ void exercicio_101(){
  * R$ 3,00 por diária, se o número de diárias for > 15;
  */
 void exercicio_102(){
-    string *clients = new string[30];
-    int *rooms = new int[30];
-    int room;
-    int k;
+    cout << "Vide projeto exercicio 102" << endl;
+    system("pause");
+    cout << "Chamando: C:\\Users\\Maxmiliano\\Documents\\Projetos\\IFC\\algoritmos-1\\exercicio_102\\dist\\Debug\\MinGW-Windows\\exercicio_102.exe" << endl;
+    system("C:\\Users\\Maxmiliano\\Documents\\Projetos\\IFC\\algoritmos-1\\exercicio_102\\dist\\Debug\\MinGW-Windows\\exercicio_102");
+}
+
+/**
+ * Um determinado material radioativo perde metade de sua massa a cada 50 segundos.
+ * Dada a massa inicial, em gramas, faça um programa que determine o temp necessário
+ * para que essa massa se torne menor que 0,05 gramas.
+ */
+void exercicio_103(){
+    float gramas;
+    int time = 0;
     
-    system("cls");
+    cout << "**************************************************" << endl;
+    cout << "Calculador de massa" << endl;
+    cout << "**************************************************" << endl;
     
-    cout << "****************************************" << endl;
-    cout << "Hotel 102" << endl;
-    cout << "Quartos disponíveis: ";
+    cout << endl;
+    cout << "Informe a massa do material" << endl;
     
-    for(int x=0; x<30; x++){
-        if (rooms[x] != 0){
-            cout << " [" << (x+1) << "] ";
+    cin >> gramas;
+    
+    while(gramas > 0.02){
+        time += 50;
+        gramas = gramas/2.0;
+    }
+    
+    cout << endl;
+    cout << "Considerando que o material perde metade de sua massa a cada 50'', " << endl;
+    cout << "o material informado levara " << time << " segundos para chegar a 0.05g" << endl;
+    
+    system("pause");
+}
+
+/**
+ * Sem utilizar a operação de multiplicação, escreva um programa que multiplique
+ * dois numeros interiros. Por exemplo: 2*2 = 2 + 2;
+ */
+void exercicio_104(){
+    int valor = 0;
+    int multiplicador = 0;
+    int total = 0;
+    
+    cout << "**************************************************" << endl;
+    cout << "Calculador de multiplicacao" << endl;
+    cout << "**************************************************" << endl;
+    
+    cout << endl;
+    cout << "Informe o valor a ser multiplicado" << endl;
+    cin >> valor;
+    cout << "Informe o multiplicador" << endl;
+    cin >> multiplicador;
+    
+    if (multiplicador > 0){
+        // laço descrescente
+        for(int x=1; x<=multiplicador; x++){
+            total = total + valor;
+        }
+    } else {
+        // Laço crescente;
+        for(int x=-1; x>=multiplicador; x--){
+            total = total + valor;
+        }
+    }
+    
+    if (multiplicador < 0 && multiplicador % 2 != 0){
+        // numero negativo;
+        total = total - total - total;
+    } else if (valor < 0 && multiplicador % 2 == 0){
+        total = total - total - total;
+    }
+    
+    cout << "A multiplicacao de " << valor << " por " << multiplicador << " e " << total << endl;
+    system("pause");
+}
+
+/**
+ * A sério Fibinacci é formada pela sequência:
+ * 0, 1, 1, 2, 3, 5, 8, 13, 21, ...
+ * Construa um algoritmo que gere e mostre a série até o vigêsimo termo.
+ */
+void exercicio_105(){
+    int termo = 20;
+    int a = 0;
+    int b = 1;
+    int c;
+    
+    cout << "**************************************************" << endl;
+    cout << "Calculador de Fibonacci" << endl;
+    cout << "**************************************************" << endl;
+    cout << endl;
+    
+    cout << "Informe o termo que deseja calcular (sugestao: 20)" << endl;
+    cin >> termo;
+    cout << "**************************************************" << endl;
+    
+    for(int x=1; x<=termo; x++){
+        if (x == 1){
+            cout << a;
+        } else {
+            cout << b;
+            c = b;
+            b = a + c;
+            a = c;
+        }
+        
+        if (x < termo){
+            cout << ", ";
         }
     }
     
     cout << endl;
-    cout << "****************************************" << endl << endl;
-    
-    
-    cout << "Por favor, escolha a opção desejada:" << endl;
-    cout << "1) Registrar reserva;" << endl;
-    cout << "2) Liberar quarto;" << endl;
-    cout << "3) Calcular total do quarto" << endl;
-    cout << "4) Calcular total do hotel" << endl;
-    cout << "5) Sair" << endl;
-    
-    cin >> k;
-    
-    system("cls");
-    
-    switch(k){
-        case 1:
-            cout << "Informe o numero do quarto: " << endl;
-            cin >> room;
-            system("cls");
-            
-            exercicio_102_add_room(rooms, clients);
-            system("pause");
-            break;
-            
-        case 2:
-            cout << "Informe o numero do quarto: " << endl;
-            cin >> room;
-            system("cls");
-            
-            exercicio_102_remove_room(rooms, clients);
-            system("pause");
-            break;
-            
-        case 3:
-            cout << "Informe o numero do quarto: " << endl;
-            cin >> room;
-            system("cls");
-            
-            exercicio_102_calc_client(rooms, clients, room);
-            system("pause");
-            break;
-            
-        case 4:
-            exercicio_102_calc_total(rooms, clients);
-            system("pause");
-            break;
-            
-        case 5:
-            break;
-            
-        default:
-            exercicio_102();
-    }
-    
-}
-
-/**
- * Adicionar um novo hóspede
- * 
- * @param rooms
- * @param clients
- * @param room
- */
-void exercicio_102_add_room(int *rooms[], int *clients[], int room){
-    cout << "****************************************" << endl;
-    cout << "Registro de hospedes" << endl;
-    cout << "Quarto: " << (room+1) << endl;
-    cout << "****************************************" << endl << endl;
-    cout << "Informe o nome do hospede: ";
-    cin >> clients[room];
-    cout << "Informe a quantidade de diarias: ";
-    cin >> rooms[room];
-}
-
-/**
- * Remover um hóspede e zerar seu quarto
- * 
- * @param rooms
- * @param clients
- */
-void exercicio_102_remove_room(int *rooms[], int *clients[], int room){
-    rooms[room] = 0;
-    clients[room] = 0;
-    
-    cout << "O quarto " << (room+1) << " foi liberado com sucesso" << endl;
-    system("pause");
-}
-
-/**
- * Calcular total do cliente
- * 
- * @param rooms
- * @param clients
- * @param room
- */
-void exercicio_102_calc_client(int **rooms[], int **clients[], int room){
-    
-    float total;
-    
-    if (rooms[room] != 0){
-        
-        total = exercicio_102_calc_total_by_client((int)rooms[room]);
-        
-        cout << "****************************************" << endl;
-        cout << "Registro de hospedes" << endl;
-        cout << "Quarto: " << (room+1) << endl;
-        cout << "****************************************" << endl << endl;
-        
-        cout << "Hospede: " << clients[room] << endl;
-        cout << "Diarias: " << rooms[room] << endl;
-        
-        cout << "Total: " << total;
-    } else {
-        cout << "Erro: Esque quarto está vazio" << endl;
-    }
     
     system("pause");
 }
-void exercicio_102_calc_total(int *rooms[], int *clients[]);
-float exercicio_102_calc_total_by_client(int diarias){
-    float total;
-    
-    total = (50.0 * diarias );
-        
-    if (diarias > 15){
-        total += 3.0;
-    } else if (diarias == 15){
-        total += 3.6;
-    } else {
-        total += 4.0;
-    }
-    
-    return total;
-}
-
-void exercicio_103(){}
-void exercicio_104(){}
-void exercicio_105(){}
