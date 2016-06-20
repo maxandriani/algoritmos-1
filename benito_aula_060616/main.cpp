@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     cout << "* Aula do dia 06/06/2016                       " << endl;
     cout << "***********************************************" << endl << endl;
     
-    cout << "Exercicio 1: Encontrar os divisores de um determinado número." << endl;
+    cout << "Exercicio 1: Encontrar os divisores de um determinado numero." << endl;
     isDivisibleBy( 2 );
     isDivisibleBy( 4 );
     isDivisibleBy( 10 );
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 void isDivisibleBy( int n ){
     
     //int n;
-    int d = 2;
+    int d = 1;
     //int key;
     
     cout << "Testando: " << n << endl;    
