@@ -1,7 +1,7 @@
 /* 
  * File:   main->cpp
- * Author: Max
- * Authos: Hugo
+ * Author: Maxmiliano Andriani
+ * Authos: Hugo Paulista
  *
  * Created on 2 de Junho de 2016, 22:39
  */

@@ -1,0 +1,100 @@
+/* 
+ * File:   main->cpp
+ * Author: Maxmiliano Andriani
+ * Authos: Hugo Paulista
+ *
+ * Created on 2 de Junho de 2016, 22:39
+ */
+
+Declara variável QUOCIENTE;
+Declara variável QUOCIENTE_MEMORY;
+Declara variável RESTO = 1;
+Declara variável RESTO_MEMORY;
+Declara variável DIVISOR;
+Declara variável DIVIDENDO;
+Declara variável LIST_SIZE = 0;
+Declara variável DIZIMA_ENCONTRADA = -2;
+
+Declara variável INDEX_COUNTER;
+Declara variável IS_ODD;
+Declara variável LEFT_SIDE;
+Declara variável RIGHT_SIDE;
+
+Declara variável START;
+Declara variável FINISH;
+
+Solicita o valor de início e atribui à START;
+Solicita o valor de fim e atribui à FINISH;
+
+Laço FOR iniciando em START e encerrando em FINISH e incrementando INTERVALO
+    
+    LIST_SIZE = 0;
+        
+    Enquanto DÍZIMA_ENCONTRADA for -2
+        // Acrescenta uma dezena à divisão
+        DIVIDENDO = RESTO * 10;
+    
+        Se (DIVIDENDO >= DIVISOR){
+            Laço FOR iniciando com 9 e encerrando com 0 e incrementando X
+                SE ( (DIVISOR * X) <= DIVIDENDO ), então:
+                    QUOCIENTE = X;
+                    ENCERRA laço FOR
+                FIM SE;
+            FIM FOR;
+        
+        FIM SE;
+        
+        Contatena QUOCIENTE em QUOCIENTE_MEMORY;
+        Contatena RESTO em RESTO_MEMORY;
+        
+        Incrementa LIST_SIZE;
+        
+        INDEX_COUNTER = 0;
+        is_odd = true;
+        TEMP = 0;
+ 
+        SE o último caractere de RESTO_MEMORY for Zero, então:
+            DIZIMA_ENCONTRADA = -1;
+            Imprima 0. + QUOCIENTE_MEMORY + espaço + Zero;
+        Senão, caso LIST_SIZE seja maior que a quantidade de casas decimais de INTERVALO, então:
+            Se (
+                O último e o Penultimo caracteres de RESTO_MEMORY são iguais, e
+                O último e o Penultimo caracteres de QUOCIENTE_MEMORY são iguais e diferentes de Zero
+                ), então:
+                DIZIMA_ENCONTRADA = 0;
+                Imprime "0." + Penultimo caractere de QUOCIENTE_MEMORY;
+            Senão:
+            
+            Laço FOR iniciando com Zero, terminando com LIST_SIZE - 1, e incrementando X:
+                SE IS_ODD for igual a TRUE, então:
+                    IS_ODD = false;
+                Senão:
+                    ID_ODD = true;
+                    INDEX_COUNTER++;
+                Fim SE;
+                
+                Laço FOR, iniciando em INDEX_COUNTER, 
+                        terminando em quantidade de casas decimais de DIVISOR, 
+                        e incrementando Y:
+                    LEFT_SIDE = "";
+                    RIGHT_SIDE = "";
+                    
+                    Laço FOR iniciando em Zero, terminando em Y - 1, e incrementando X:
+                        Contatena o caractere de QUOCIENTE_MEMORY na posição ((index - (y * 2)) + X) em LEFT_SIDE;
+                        Contatena o caractere de QUOCIENTE_MEMORY na posição ((index - y) + X) em RIGHT_SIDE;
+                    FIM laço FOR;
+                    
+                    SE LEFT_SIDE for iigual a RIGHT_SIDE, então:
+                        DIZIMA_ENCONTRADA = Y;
+                        Imprime "0." + QUOCIENTE_MEMORY posição Zero à (INDEX_SIZE - Y*2);
+                        Imprime Espaço;
+                        Imprime QUOCIENTE_MEMORY posição (INDEX_SIZE - Y*2)+1 à (INDEX_SIZE - Y);
+                        Força encerramento do laço FOR;
+                    FIM SE
+                FIM Laço FOR
+            FIM Laço FOR;
+                    
+            Fim SE
+        Fim SE
+    fim ENQUANTO;
+Fim laço FOR;
