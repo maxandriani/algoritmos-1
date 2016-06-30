@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void isDivisibleBy( int n0 );
+void findDivisibles( int n );
 
 /*
  * Main function
@@ -22,19 +22,20 @@ int main(int argc, char** argv) {
     cout << "***********************************************" << endl << endl;
     
     cout << "Exercicio 1: Encontrar os divisores de um determinado numero." << endl;
-    isDivisibleBy( 2 );
-    isDivisibleBy( 4 );
-    isDivisibleBy( 10 );
-    isDivisibleBy( 12 );
-    isDivisibleBy( 14 );
-    isDivisibleBy( 15 );
-    isDivisibleBy( 21 );
-    isDivisibleBy( 123 );
-    isDivisibleBy( 125 );
-    isDivisibleBy( 257 );
-    isDivisibleBy( 2564971 );
-    isDivisibleBy( 2584973 );
-    isDivisibleBy( 52729 );
+    findDivisibles( 2 );
+    findDivisibles( 4 );
+    findDivisibles( 10 );
+    findDivisibles( 12 );
+    findDivisibles( 14 );
+    findDivisibles( 15 );
+    findDivisibles( 21 );
+    findDivisibles( 123 );
+    
+    findDivisibles( 125 );
+    findDivisibles( 257 );
+    findDivisibles( 2564971 );
+    findDivisibles( 2584973 );
+    findDivisibles( 52729 );
     
     cout << endl;
     
@@ -46,7 +47,7 @@ int main(int argc, char** argv) {
 /**
  * Find the divisor of a number
  */
-void isDivisibleBy( int n ){
+void findDivisibles( int n ){
     
     //int n;
     int d = 1;
